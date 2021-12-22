@@ -1,6 +1,6 @@
 /**
  * @author Roshan Nunna
- * Test file to make sure toString for SudokuInstance is working
+ * Test file to use sudoku solver
  */
 package Sudoku_Puzzle;
 

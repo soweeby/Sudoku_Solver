@@ -132,10 +132,19 @@ public class SudokuInstance {
         return true;
     }
 
+    /**
+     * checks if whole board is valid by checking if the columns & rows are valid
+     * @return true if whole board is valid, false if not
+     */
     public boolean isValid() {
         return validCols() && validRows();
     }
 
+    /**
+     * checks if the current instance is the solution by checkinng if the rows & colums are valid
+     * and if the entire board is filled
+     * @return true if solution, false if not solution
+     */
     public boolean isSolution() {
         return isValid() && isFilled();
     }
