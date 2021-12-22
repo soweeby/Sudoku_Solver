@@ -40,6 +40,11 @@ public class SudokuInstance {
         }
     }
 
+    /**
+     * copy constructor to create neighbors
+     * @param other SudokuInstance to copy from
+     * @param num number to put into next empty spot
+     */
     private SudokuInstance(SudokuInstance other, int num) {
         this.cursor = other.cursor + 1;
         this.rows = other.rows;
@@ -48,10 +53,15 @@ public class SudokuInstance {
         for (int crow = 0; crow < this.rows; ++crow) {
             System.arraycopy(other.board[crow], 0, this.board[crow], 0, this.cols);
         }
-
         int row = this.cursor / this.rows;
         int col = this.cursor % this.cols;
-
+        //if next spot isn't empty
+        while (this.board[row][col] != 0) {
+            this.cursor += 1;
+            row = this.cursor / this.rows;
+            col = this.cursor % this.cols;
+        }
+        //fills in next empty spot with number
         this.board[row][col] = num;
     }
 
@@ -61,7 +71,7 @@ public class SudokuInstance {
      */
     public List<SudokuInstance> getPermutations() {
         ArrayList<SudokuInstance> permutations = new ArrayList<>();
-        for (int i = 1; i < this.rows; ++i) {
+        for (int i = 1; i < this.rows; ++i) { //keeps adding numbers into the spot to the right
             permutations.add(new SudokuInstance(this, i));
         }
         return permutations;
@@ -71,14 +81,15 @@ public class SudokuInstance {
      * makes sure there are no duplicates in the rows
      * @return true if no duplicates, false if there are duplicates
      */
-    public boolean validRows() {
+    private boolean validRows() {
+
         HashSet<Integer> ints = new HashSet<>();
         for (int i = 0; i < this.rows; ++i) {
             for (int j = 0; j < this.cols; ++j) {
-                if (ints.contains(this.board[i][j])) {
+                if (ints.contains(this.board[i][j])) { //if this is true, this means there are duplicates
                     return false;
                 }
-                if (this.board[i][j] != 0) {
+                if (this.board[i][j] != 0) { //prevents empty spaces from getting counted as duplicates
                     ints.add(this.board[i][j]);
                 }
             }
@@ -90,20 +101,43 @@ public class SudokuInstance {
      * make sure there are no duplicates in the columns
      * @return true if no duplicates, false if there are duplicates
      */
-    public boolean validCols() {
+    private boolean validCols() {
         HashSet<Integer> ints = new HashSet<>();
         for (int i = 0; i < this.cols; ++i) {
             for (int j = 0; j < this.rows; ++j) {
-                if (ints.contains(this.board[j][i])) {
+                if (ints.contains(this.board[j][i])) { //if this is true, this means there are duplicates
                     return false;
                 }
-                if (this.board[j][i] != 0) {
+                if (this.board[j][i] != 0) { //prevents empty spaces from getting counted as duplicates
                     ints.add(this.board[j][i]);
                 }
             }
         }
         return true;
     }
+
+    /**
+     * checks if the whole board is filled
+     * @return true if board is filled, false if board isn't filled
+     */
+    private boolean isFilled() {
+        for (int i = 0; i < this.rows; ++i) {
+            List<Object> ints = List.of(this.board[i]);
+            if (ints.contains(0)) { //0's represent empty spaces. so, if a row contains a 0, then the board isn't filled
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isValid() {
+        return validCols() && validRows();
+    }
+
+    public boolean isSolution() {
+        return isValid() && isFilled();
+    }
+
     @Override
     public String toString() {
         String finString = "";
