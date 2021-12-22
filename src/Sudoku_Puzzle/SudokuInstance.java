@@ -6,6 +6,7 @@ package Sudoku_Puzzle;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SudokuInstance {
     private int rows;
@@ -71,7 +72,7 @@ public class SudokuInstance {
      */
     public List<SudokuInstance> getPermutations() {
         ArrayList<SudokuInstance> permutations = new ArrayList<>();
-        for (int i = 1; i < this.rows; ++i) { //keeps adding numbers into the spot to the right
+        for (int i = 1; i <= this.rows; ++i) { //keeps adding numbers into the spot to the right
             permutations.add(new SudokuInstance(this, i));
         }
         return permutations;
@@ -82,9 +83,8 @@ public class SudokuInstance {
      * @return true if no duplicates, false if there are duplicates
      */
     private boolean validRows() {
-
-        HashSet<Integer> ints = new HashSet<>();
         for (int i = 0; i < this.rows; ++i) {
+            HashSet<Integer> ints = new HashSet<>();
             for (int j = 0; j < this.cols; ++j) {
                 if (ints.contains(this.board[i][j])) { //if this is true, this means there are duplicates
                     return false;
@@ -102,8 +102,9 @@ public class SudokuInstance {
      * @return true if no duplicates, false if there are duplicates
      */
     private boolean validCols() {
-        HashSet<Integer> ints = new HashSet<>();
+
         for (int i = 0; i < this.cols; ++i) {
+            HashSet<Integer> ints = new HashSet<>();
             for (int j = 0; j < this.rows; ++j) {
                 if (ints.contains(this.board[j][i])) { //if this is true, this means there are duplicates
                     return false;
@@ -122,7 +123,8 @@ public class SudokuInstance {
      */
     private boolean isFilled() {
         for (int i = 0; i < this.rows; ++i) {
-            List<Object> ints = List.of(this.board[i]);
+            //converts array of ints to list of Integers
+            List<Integer> ints = Arrays.stream(this.board[i]).boxed().toList();
             if (ints.contains(0)) { //0's represent empty spaces. so, if a row contains a 0, then the board isn't filled
                 return false;
             }
