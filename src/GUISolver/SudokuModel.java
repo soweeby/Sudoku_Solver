@@ -4,6 +4,7 @@
  */
 package GUISolver;
 
+import Sudoku_Puzzle.Backtracker;
 import Sudoku_Puzzle.SudokuInstance;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class SudokuModel {
     }
 
     public void updateGUI(String data) {
-        //TODO: IMPLEMENT THIS
+        gui.update(data);
     }
 
     public void loadPuzzle(String filename) throws IOException {
@@ -38,5 +39,11 @@ public class SudokuModel {
 
     public SudokuInstance getPuzzle() {
         return this.puzzle;
+    }
+
+    public void solvePuzzle() {
+        Backtracker b = new Backtracker();
+        this.puzzle = b.solve(this.puzzle);
+        updateGUI(null);
     }
 }

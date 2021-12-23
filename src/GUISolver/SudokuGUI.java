@@ -40,7 +40,9 @@ public class SudokuGUI extends Application {
 
 
     private void makeButtons(GridPane pane, Stage stage, boolean change) {
-        this.buttons = new LinkedList<>();
+        if (!change) {
+            this.buttons = new LinkedList<>();
+        }
         pane.getChildren().clear();
         //setting buttons for each number in the puzzle
         int id = 0;
@@ -68,7 +70,10 @@ public class SudokuGUI extends Application {
         //TODO: SET UP EVENT HANDLER FOR LOAD BUTTON
 
         Button solve = new Button("Solve");
-        //TODO: SET UP EVENT HANDLER FOR SOLVE BUTTON
+        solve.setId("solve");
+        solve.setOnAction(event -> {
+            this.model.solvePuzzle();
+        });
 
         //making grid pane with number buttons
         GridPane gridPane = new GridPane();
@@ -100,7 +105,7 @@ public class SudokuGUI extends Application {
     }
 
     public void update(String data) {
-        if (!buttons.isEmpty()) {
+        if (this.buttons != null) {
             makeButtons(this.pane, this.stage, true);
         }
     }
