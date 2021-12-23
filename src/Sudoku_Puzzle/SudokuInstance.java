@@ -149,6 +149,19 @@ public class SudokuInstance {
         return isValid() && isFilled();
     }
 
+    /**
+     * returns size of board
+     * @return size of board
+     */
+    public int getSize() {
+        return this.rows;
+    }
+
+    public int[][] getBoard() {
+        return board;
+    }
+
+
     @Override
     public String toString() {
         String finString = "";
@@ -176,4 +189,6 @@ public class SudokuInstance {
         result = 31 * result + Arrays.hashCode(board);
         return result;
     }
+
+
 }
