@@ -30,7 +30,7 @@ public class SudokuModel {
     public void loadPuzzle(String filename) throws IOException {
         this.puzzle = new SudokuInstance(filename);
         this.size = this.puzzle.getSize();
-        updateGUI(null);
+        updateGUI("Loaded");
     }
 
     public int getSize() {

@@ -8,8 +8,10 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,8 +22,9 @@ public class SudokuGUI extends Application {
     private GridPane pane;
     private Stage stage;
 
-    String filename;
+
     public void init() throws IOException {
+        String filename;
         try {
             filename = getParameters().getRaw().get(0);
         }
@@ -51,7 +54,9 @@ public class SudokuGUI extends Application {
                 int num = this.model.getPuzzle().getBoard()[row][col];
                 Button button = (change ? this.buttons.get(id) : new Button());
                 id += 1;
-                buttons.add(button);
+                if (!change) {
+                    buttons.add(button);
+                }
                 button.setStyle("fx-font-size: " + 20 + ";"); //todo: get rid of magic number
                 button.setMinSize(75, 75);
                 button.setMaxSize(75, 75);
@@ -65,9 +70,19 @@ public class SudokuGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        FileChooser fc = new FileChooser(); //filechooser for load
+
         Button load = new Button("Load");
         load.setId("load");
-        //TODO: SET UP EVENT HANDLER FOR LOAD BUTTON
+        //load button brings up a file chooser dialog to load a new puzzle
+        load.setOnAction(event -> {
+            File selectedFile = fc.showOpenDialog(primaryStage);
+            try {
+                this.model.loadPuzzle(selectedFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         Button solve = new Button("Solve");
         solve.setId("solve");
@@ -106,7 +121,14 @@ public class SudokuGUI extends Application {
 
     public void update(String data) {
         if (this.buttons != null) {
-            makeButtons(this.pane, this.stage, true);
+            if (data != null && data.equals("Loaded")) {
+                makeButtons(this.pane, this.stage, false);
+            }
+            else {
+                makeButtons(this.pane, this.stage, true);
+            }
+            this.stage.sizeToScene();
         }
+
     }
 }
